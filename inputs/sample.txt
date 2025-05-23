@@ -16,3 +16,4 @@ bath_t1t3_disorder = 1300
 bath_t1t3_time = 40
 bath_t2_disorder = 125
 bath_t2_time = 300
+temperature = 300

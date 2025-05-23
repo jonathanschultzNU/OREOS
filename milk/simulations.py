@@ -18,10 +18,48 @@ import numpy.matlib
 import scipy.optimize
 from milk.signal_processing import multcompreal, response_FFT
 from milk.operational import print_to_log_file
+from scipy import constants
 
 clight = 2.9979*10**(-5) # speed of light[cm/fs]
 
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+def thermal_initial_state(p, H):
+    """
+    Build the thermal equilibrium state at the temperature stored in p['temperature'].
+
+    Returns
+    -------
+    rho_site : (N,N) ndarray
+        Density matrix in the site/Fock basis.
+    psi_site : (N,) ndarray
+        Ket whose |ψ|² reproduces the Boltzmann populations (approximate).
+    """
+    # --- constants in cm^-1 K^-1 so they match H['e'] units --------------
+    k_B_cm = constants.k / (constants.h * constants.c * 100.0)
+
+    T = p.get("temperature", None)
+    if T is None or T <= 0:
+        g_idx    = np.argmin(H["ground eigenvals"])                   # index of lowest eigen-energy
+        psi_site = H["ground eigenvecs"][:, g_idx]                    # eigen-ket in site basis
+        psi_site /= np.linalg.norm(psi_site)           # normalise (safety)
+        rho_site = np.outer(psi_site, psi_site.conj()) # density matrix
+        return rho_site, psi_site
+
+    beta = 1.0 / (k_B_cm * T)                               # β in (cm⁻¹)⁻¹
+    e_shifted = H["ground eigenvals"] - H["ground eigenvals"].min()                       # numerical stability
+    boltz = np.exp(-beta * e_shifted)
+    probs = boltz / boltz.sum()                             # pᵢ
+
+    # Eigen- to site-basis transformation
+    V = H["ground eigenvecs"]                                              # shape (N,N)
+
+    rho_site = V @ np.diag(probs) @ V.conj().T              # exact mixed state
+    psi_site = V @ np.sqrt(probs)                           # “square-root” ket
+    psi_site /= np.linalg.norm(psi_site)                    # safety
+
+    return rho_site, psi_site
+    
 
 def response_simulation(p, H, logfilename):
     
@@ -76,7 +114,8 @@ def response_simulation(p, H, logfilename):
 
         
     # define initial state
-    ket = H['fockgg'][:,0].copy()  # assuming no thermal distribution
+    # ket = H['fockgg'][:,0].copy()  # assuming no thermal distribution
+    rho, ket = thermal_initial_state(p, H)
     bra = ket.transpose()
 
     Rt1t3 = {}

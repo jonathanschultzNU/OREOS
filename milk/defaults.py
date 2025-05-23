@@ -78,7 +78,7 @@ def convert_input_types(p):
 
     int_keys = ['t1_points', 't2_points', 't3_points', 'padding value']
     float_keys = ['t1_step', 't2_step', 't3_step', 'bath_t1t3_disorder', 'bath_t1t3_time', 
-                  'bath_t2_disorder', 'bath_t2_time', 'e1', 'e2', 'J']
+                  'bath_t2_disorder', 'bath_t2_time', 'e1', 'e2', 'J', 'temperature']
     
     # Convert simple int and float parameters
     for key in int_keys:

@@ -111,6 +111,13 @@ def response_FFT(p, R, Rt1t3d):
                                                  Rw1w3['4']], axis=0))
               })
     
+    maxval = np.max(np.abs(R['Rw1w3Absorptive']))
+    
+    R['Rw1w3 normalized'] = {'Rw1w3Absorptive': R['Rw1w3Absorptive']/maxval,
+                             'Rw1w3Rephasing': multcompreal(R['Rw1w3Rephasing'], 1/maxval),
+                             'Rw1w3NonRephasing': multcompreal(R['Rw1w3NonRephasing'], 1/maxval)
+                             }
+    
     return R, Rt1t3c, Rw1w3
 
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

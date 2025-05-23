@@ -463,6 +463,7 @@ def FE_dimer_Hamiltonian(p):
     H['basis'] = H['gbasis']+H['ebasis']
     H['states'] = len(H['basis'])
     H['fock'] = np.identity(H['states']);
+    n = int(H['states']/3)
     
     # construct electronic operators   
     cm1TOT = FE_dimer_electronic_creation_total(H['basis'],H['states'],1,nvib,1) 
@@ -513,6 +514,9 @@ def FE_dimer_Hamiltonian(p):
         H['Hcouplings'] = H['Hcouplings'] + np.sum([Hevm1[str(i+1)], Hevm2[str(i+1)]], axis=0)
   
     H['e'], H['v'] = np.linalg.eig(H['H'].copy())
+    H['ground block'] = H['H'][0:n,0:n]
+    H['ground eigenvals'], H['ground eigenvecs'] = np.linalg.eig(H['ground block'])
+    
     H['MU'] = 0.5*(cm1TOT.transpose()+cm1TOT+cm2TOT.transpose()+cm2TOT)    # transition dipole operator
     H['Hrf'] = deepcopy(H['H'])
     H['MU site basis'] = deepcopy(H['MU'])
@@ -528,7 +532,7 @@ def FE_dimer_Hamiltonian(p):
     H['MU'] = (2*pi)*c_light*H['MU']
     
     # partition Hamiltonian, Fock, and MU matrices
-    n = int(H['states']/3)
+    
     H['Hgg'] = H['Hrf'][0:n,0:n]
     H['Hee'] = H['Hrf'][n:,n:]
     H['fockgg'] = H['fock'][0:n,0:n]
