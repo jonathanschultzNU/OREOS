@@ -27,11 +27,8 @@ OREOS is a Python-based simulation package designed for computing third-order no
 To use the OREOS Optical Response Simulator, follow these steps to set up the environment.
 
 ### 1. Clone or Download the Repository
-If you haven't already, either download the repository or clone it to your local machine:
-```bash
-git clone https://github.com/your-repo/oreos-simulator.git
-cd oreos-simulator
-```
+If you haven't already, either download the repository or clone it to your local machine.
+
 ### 2. Create and Activate the Conda Environment
 Use the provided environment.yml file to set up a Conda environment with all required dependencies:
 ```bash
@@ -48,11 +45,13 @@ To run the simulation, execute:
 ```bash
 python main.py <runname>
 ```
-where <runname> is the identifier for the input and output files. To run the included sample_input job, execute:
+where <runname> is the identifier for the input and output files. To run the included sample job, execute:
 
 ```bash
-python main.py sample_input
+python main.py sample
 ```
+
+Note that <runname> must match the file name of your input .txt file.
 
 ---
 
@@ -74,6 +73,7 @@ The simulation requires a set of parameters provided in a dictionary format. Bel
 | `bath_t1t3_disorder`, `bath_t2_disorder` | `float` | Spectral diffusion parameters (cm⁻¹). |
 | `bath_t1t3_time`, `bath_t2_time` | `float` | Bath correlation times (fs). |
 | `padding value` | `int` | Number of points for zero-padding in Fourier transforms. |
+| `temperature` | `float` | Parameter dictating thermal populations in initial state (Boltzmann distribution). |
 
 
 ## Sample Input File:
@@ -96,6 +96,7 @@ bath_t1t3_disorder = 1300
 bath_t1t3_time = 40
 bath_t2_disorder = 125
 bath_t2_time = 300
+temperature = 300
 
 ---
 
@@ -115,4 +116,4 @@ If you use this code in your research, please cite:
 This project is licensed under the MIT License. See LICENSE for details.
 
 ### **Contact**
-For questions or contributions, please reach out to the developers.
+For questions or contributions, please reach out to Jon Schultz (jonathan.schultz@duke.edu)
