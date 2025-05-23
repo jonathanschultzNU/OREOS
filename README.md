@@ -51,7 +51,7 @@ where <runname> is the identifier for the input and output files. To run the inc
 python main.py sample
 ```
 
-Note that <runname> must match the file name of your input .txt file.
+Note that the value you supply for the runname must match the file name of your .txt input file.
 
 ---
 
